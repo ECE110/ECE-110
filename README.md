@@ -29,7 +29,7 @@ int W=0 <-- the number of hash marks/perpendicular black lines my bot has passed
 PART 1:
 the first if statement "if ((W==12-TIE))"; encompasses all of part 1 so if this condition is not satisfied none of part 1 runs, meaning this only occurs when the bot is at its final destination. 
 
-the reason it is 12-TIE is that for me there are 11 hash marks along my path, this varies group by group, so if I am first in line I would want to finally stop at the 11th hash mark which would be W-12
+the reason it is 12-TIE is that for me there are 11 hash marks along my path, this varies group by group, so if I am first in line I would want to finally stop at the 11th hash mark which would be 12-TIE
 
 this statement says that once it gets to its final destination it should stop " servoLeft.writeMicroseconds(1500);
 servoRight.writeMicroseconds(1500);" and that it should display my spot in line
