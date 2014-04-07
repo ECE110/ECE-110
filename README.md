@@ -40,7 +40,7 @@ the random 5 second delay is there as a band-aid-esque solution to my robot rand
 
 PART 2: 
 
-the next part is an if statment within an else statement that encompasses the rest of the code(its bracket that ends this else statement is way at the end of my code) so whenever Part 1 doesn''t occur this code runs(so it runs at all times except when the bot gets to its final spot in line)
+the next part is an if statment within an else statement that encompasses the rest of the code(the bracket that ends this else statement is way at the end of my code) so whenever Part 1 doesn''t occur this code runs(so it runs at all times except when the bot gets to its final spot in line)
 
 "  if (W==6 && TIE >1 && halt== true)";
 
