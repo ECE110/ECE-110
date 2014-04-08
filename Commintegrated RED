@@ -54,16 +54,13 @@ pinMode(TxPin, OUTPUT);
 int Q1 = 0;  int Q2 = 0; int Q3 = 0; int Q4 = 0;  int QTI; int R; int TIE= 0; int non = 0; int k; int G; boolean Xb = true; int Diff; int Z=0; int W= 0; int V; int C; boolean halt= true; //int Time = ; int time;//int Q5;
 void loop()                                  // Main loop auto-repeats               
 {   
-  //Serial.println(RCTime(6));
 
-
-Q1=0;Q2=0;Q3=0;Q4=0;QTI=0; //Q5 =0;
+Q1=0;Q2=0;Q3=0;Q4=0;QTI=0; 
  //Serial.print("Time: ");
- // time = millis();
-  //prints time since program started
- //Serial.println(time);
-  // wait a second so as not to send massive amounts of data
+ // time = millis();  //prints time since program started
+ //Serial.println(time);  // wait a second so as not to send massive amounts of data
  // delay(1000);
+ 
  if ((W==12-TIE))
  {
    
