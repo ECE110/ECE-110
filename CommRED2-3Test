@@ -1,0 +1,308 @@
+//used for testing without wireless--emulating wireless with serial print
+#include <Servo.h>                           // Include servo library
+// //initialize LCD display
+const int TxPin = 7;
+
+#include <SoftwareSerial.h>
+SoftwareSerial one = SoftwareSerial(255, TxPin);
+#define Rx    10			    // DOUT to pin 6
+#define Tx    11			    // DIN to pin 7
+SoftwareSerial Xbee (Rx, Tx); // setting the DOUT for the xbee to pin 10 and the DIN to pin 11
+//
+Servo servoLeft;                             // Declare left servo
+Servo servoRight;                             // Declare left servo
+
+void setup()                                 // Built in initialization block
+{
+  Serial.begin(9600);
+  Xbee.begin(9600);
+  delay(500);
+  servoLeft.attach(12);                      // Attach left signal to pin 12
+  servoRight.attach(13);                      // Attach left signal to pin 13  
+  pinMode(TxPin, OUTPUT);
+  digitalWrite(TxPin, HIGH);
+
+
+  //one.begin(9600);
+
+  delay(100);
+  //one.write(12);                 // Clear             
+  // one.write(17);                 // Turn backlight on
+  //  delay(5);                           // Required delay
+  //one.print("May the force  ");  // First line
+  //one.write(13);                 // Form feed
+  //one.print("be with you!  ");   // Second line
+  //  mySerial.write(212);                // Quarter note
+  //  mySerial.write(220);                // A tone
+  //  delay(3000);                        // Wait 3 seconds
+  //one.write(18);                 // Turn backlight off
+}  
+
+
+
+
+long RCTime(int sensorIn){
+  long duration = 0;
+  pinMode(sensorIn, OUTPUT);     // Make pin OUTPUT
+  digitalWrite(sensorIn, HIGH);  // Pin HIGH (discharge capacitor)
+  delay(1);                      // Wait 1ms
+  pinMode(sensorIn, INPUT);      // Make pin INPUT
+  digitalWrite(sensorIn, LOW);   // Turn off internal pullups
+  while(digitalRead(sensorIn)){  // Wait for pin to go LOW
+    duration++;
+  }
+  return duration;
+}
+int Q1 = 0;  
+int Q2 = 0; 
+int Q3 = 0; 
+int Q4 = 0;  
+int QTI; 
+int R; 
+int TIE= 0; 
+int non = 0; 
+int k; 
+int G; 
+boolean Xb = true; 
+int Diff; 
+int Z=0; 
+int W= 0; 
+int V; 
+int C; 
+boolean halt= true; //int Time = ; int time;//int Q5;
+char incoming; 
+char outgoing; 
+int sent = true;
+void loop()                                  // Main loop auto-repeats               
+{   
+
+
+  Q1=0;
+  Q2=0;
+  Q3=0;
+  Q4=0;
+  QTI=0; 
+  /*Serial.print("Time: ");
+   	  time = millis();  //prints time since program started
+   	 Serial.println(time);  // wait a second so as not to send massive amounts of data
+   	 delay(1000); */
+
+
+  if ((W==12-TIE)) //arrives at its proper place in line, stops and sends signal
+  {
+    //detach servomotors
+    servoLeft.writeMicroseconds(1500);
+    servoRight.writeMicroseconds(1500);
+    servoLeft.detach();
+    servoRight.detach();
+    //Outgoing communications: when to send the signal
+
+    if ((W==12-TIE)) {          // Is serial data available?
+
+      Xbee.print(TIE+1);
+    }
+
+
+    //one.begin(9600);
+    //	  
+    //	  delay(100);
+    //	  one.write(12);                 // Clear             
+    //	  one.write(17);                 // Turn backlight on
+    //          delay(5);                           // Required delay
+    //	  one.print("May the force  ");  // First line
+    //	  one.write(13);                 // Form feed
+    //	  one.print("be with you!  ");   // Second line                 
+    //	  one.write(18);                 // Turn backlight off
+    //delay(5000);
+  }
+
+
+  else if (W==(6/*-TIE*/) && (halt == true)) { //arrives at main horizontal, if not 1 pauses and waits for the signal to go 
+    //Incoming communications: when to leave for the shaft		 
+    if (TIE != 1) {
+      while (1) {
+        servoLeft.detach();
+        servoRight.detach();
+        //delay(5000);
+//commented out for testing        if(Xbee.available()) {            // Is data available from XBee?
+//          incoming = Xbee.read();    // Read character,
+//          Serial.println("Incoming: ");
+//          Serial.print(incoming);
+          if (Serial.available()){
+          incoming = Serial.read();
+          
+          Serial.println("TIE");
+          Serial.print(TIE);
+          Serial.println("INcoming");
+          Serial.print(incoming);
+  
+        if (incoming == TIE-'0')    //   send to Serial Monitor
+        {
+          Serial.println("go");
+          break;
+        }
+        }
+//      }
+    }
+    }
+
+
+    //detach servos so that display does not interfere with movement (DEBUG: spinning)
+    //  servoLeft.writeMicroseconds(1500);
+    //      servoRight.writeMicroseconds(1500);
+    //		servoLeft.detach();
+    //		servoRight.detach();
+    //write to display
+    //			one.write(12);                 // Clear             
+    //			one.write(17);                 // Turn backlight on
+    //			delay(5);                           // Required delay
+    //			one.print("Place in line");  // First line
+    //			one.write(13);                 // Form feed
+    //			one.print(TIE);   // Second line
+    //		//reattach servos
+    //		servoLeft.attach(12);
+    //		servoRight.attach(13);
+    halt = false;
+  }
+  else
+  {
+    //Control variables for line following
+    //Serial.println(RCTime(6));
+    servoLeft.attach(12);
+    servoRight.attach(13);
+    if (RCTime(2) > 30)
+    {
+      Q1= 1;
+    }
+
+
+    if (RCTime(3) > 30)
+    {
+      Q2 = 10;
+    }
+
+
+    if  (RCTime(4) > 30)
+    {
+      Q3 = 100;
+    }
+
+
+    if (RCTime(5) > 30)
+    {
+      Q4 = 1000;
+    }
+
+
+    //Sensing craft
+    if (W < 5)
+      //if  (millis() < Time)
+    {
+      if (RCTime(6) <650)      
+      {
+        R=1;//side sensors sees white
+        k=0; //reset k to 0 to add another object to the count 
+
+
+      }
+      else if (k == 0 && R == 1)
+      {
+        TIE = TIE+1; //add to the count of imperial fighters
+        //Diff = TIE - non;
+        Serial.println("TIE");
+        Serial.println(RCTime(6));
+        Serial.println(TIE);
+        //Serial.println("Diff");
+        //Serial.println(Diff);
+        k=1;
+        R=0;
+      }
+    }
+
+    QTI = Q1+Q2+Q3+Q4;
+    if (QTI == 1111)
+    {
+      //Serial.println("BLACK");
+      V=1; // QTI sensors see a perpendicular black line
+      C=0; // reset C to 0 to add another line to the count
+    }
+    else if (C==0 && V==1)
+    {
+      W=W+1; // add to the count of black lines
+      Serial.println("W");
+      //Serial.println(W);
+      Serial.println(QTI);
+      V=0;
+      C=1;
+
+
+    } 
+    switch (QTI)
+    {
+    case 1: 
+      //Serial.println("pivot right");
+      servoLeft.writeMicroseconds(1700); 
+      servoRight.writeMicroseconds(1700);
+      break;
+    case 10:
+      //curve right
+      //Serial.println("curve right");
+      servoLeft.writeMicroseconds(1650);
+      servoRight.writeMicroseconds(1600); 
+      break;
+    case 11: // curve right
+      //Serial.println("curve right");
+      servoLeft.writeMicroseconds(1570);
+      servoRight.writeMicroseconds(1550);
+      break;
+      /*case 100: 
+       					Serial.println("straight");
+       					servoLeft.writeMicroseconds(1600);
+       					servoRight.writeMicroseconds(1700); */
+    case 110: //straight
+      //Serial.println("straight");
+      servoLeft.writeMicroseconds(1300);
+      servoRight.writeMicroseconds(1700);
+      break;
+    case 100:
+      //curve left'
+      // Serial.println("straight");
+      //Serial.println("curve left");
+      servoLeft.writeMicroseconds(1325);
+      servoRight.writeMicroseconds(1300);
+      break;
+    case 1100: // curve left
+      //Serial.println("curve left");
+      servoLeft.writeMicroseconds(1400);
+      servoRight.writeMicroseconds(1300);
+      break;
+    case 1110: // pivot left
+      //Serial.println("pivot left");
+      servoLeft.writeMicroseconds(1300);
+      servoRight.writeMicroseconds(1300);
+      break;
+    case 0: //go backwards
+      //Serial.println("straight");
+      servoLeft.writeMicroseconds(1300);
+      servoRight.writeMicroseconds(1700);
+      break;
+    case 1111: //go backwards
+      //Serial.println("straight");
+      //servoLeft.writeMicroseconds(1500);
+      //servoRight.writeMicroseconds(1500);
+
+
+
+
+      servoLeft.writeMicroseconds(1300);
+      servoRight.writeMicroseconds(1700);
+      break; 
+      //case 1111: // stop
+      //delay(2000);
+      //default:
+      //delay(3000);
+    }
+
+
+  }
+}
